@@ -11,10 +11,9 @@ module TwoFactorAuthentication
 
       def handle_two_factor_authentication
         unless devise_controller?
-          Devise.mappings.keys.flatten.any? do |scope|
-            if signed_in?(scope) and warden.session(scope)[:need_two_factor_authentication]
-              handle_failed_second_factor(scope)
-            end
+          scope = 'admin_user'
+          if signed_in?(scope) and warden.session(scope)[:need_two_factor_authentication]
+            handle_failed_second_factor(scope)
           end
         end
       end
@@ -29,7 +28,7 @@ module TwoFactorAuthentication
       end
 
       def two_factor_authentication_path_for(resource_or_scope = nil)
-        scope = Devise::Mapping.find_scope!(resource_or_scope)
+        scope = 'admin_user'
         change_path = "#{scope}_two_factor_authentication_path"
         send(change_path)
       end
